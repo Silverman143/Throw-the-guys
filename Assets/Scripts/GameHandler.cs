@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        Application.targetFrameRate = 60;
-    }
+    [SerializeField] private GameObject _characterPrefab;
 
-    // Update is called once per frame
-    void Update()
+    private void CreateCharacter()
     {
-        
+        GameObject newCharacter = Instantiate(_characterPrefab, new Vector3(0f, 0.8f, -6.5f), Quaternion.identity, null);
     }
 }

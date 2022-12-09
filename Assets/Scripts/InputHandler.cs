@@ -37,6 +37,7 @@ public class InputHandler : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Vector3[] points = new Vector3[2];
+            _lineRenderer.enabled = true;
             _lineRenderer.SetPositions (points);
             Touch touch = Input.touches[0];
 
@@ -65,6 +66,7 @@ public class InputHandler : MonoBehaviour
                 _isActive = false;
                 OnInputGetted(direction.normalized);
                 direction = Vector3.zero;
+                _lineRenderer.enabled = false;
             }
         }
     }
