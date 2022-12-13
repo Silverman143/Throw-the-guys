@@ -70,4 +70,9 @@ public class InputHandler : MonoBehaviour
             }
         }
     }
+
+    public void SetNewCharacter(Transform character)
+    {
+        _activeCharacter = character;
+    }
 }

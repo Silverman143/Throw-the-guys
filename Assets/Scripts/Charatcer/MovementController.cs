@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum CharacterStatus
+{
+    Stay, Move, Attraction
+}
+
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rigidbody;
@@ -9,9 +14,18 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Rigidbody _spine1;
     [Range(-5, 15)]
     [SerializeField] private float _force;
-
+    [SerializeField] private Vector3 _reductionTarget;
+  
     private bool _isMoving = false;
+
     private Vector3 _movingDirection;
+
+    private Transform _target;
+    private float _portalAcceleration = 150f;
+    private CharacterStatus _status;
+    private CharacterController _characterController;
+
+
 
     private void OnEnable()
     {
@@ -25,6 +39,7 @@ public class MovementController : MonoBehaviour
 
     private void Start()
     {
+        _characterController = transform.parent.parent.GetComponent<CharacterController>();
         _movingDirection = Vector3.zero;
     }
 
@@ -35,6 +50,19 @@ public class MovementController : MonoBehaviour
             Move();
         }
         Rotate();
+
+        switch (_status)
+        {
+            case CharacterStatus.Stay:
+                break;
+            case CharacterStatus.Move:
+                Move();
+                break;
+            case CharacterStatus.Attraction:
+                PortalAttraction();
+                break;
+        }
+            
     }
 
     private void Rotate()
@@ -50,11 +78,39 @@ public class MovementController : MonoBehaviour
         _rigidbody.velocity = _movingDirection * _force;
     }
 
+    private void PortalAttraction()
+    {
+        Vector3 moveVector = _target.position - transform.position;
+
+        _rigidbody.velocity = moveVector * _portalAcceleration * Time.deltaTime;
+        if (Reduction())
+        {
+            Deactivate();
+            _characterController.Deactivate();
+            
+        }
+    }
+
+    private bool Reduction()
+    {
+        if (transform.localScale != _reductionTarget)
+        {
+            transform.localScale = Vector3.Slerp(transform.localScale, _reductionTarget, 0.25f);
+            return false;
+        }
+        else return true;
+        
+    }
+
     private void Activate(Vector3 dircetion)
     {
+        if (!_characterController.IsActiveCharacter()) return;
         _movingDirection = dircetion;
         _rigidbody.constraints = RigidbodyConstraints.FreezePositionY;
         _isMoving = true;
+        _status = CharacterStatus.Move;
+        _rigidbody.isKinematic = false;
+        Debug.Log("Doll activate");
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -62,14 +118,22 @@ public class MovementController : MonoBehaviour
         Vector3 newDirection = Vector3.Reflect(_movingDirection, collision.contacts[0].normal);
         _movingDirection = newDirection.normalized;
     }
-
-    private void Deactivate()
+    private void OnTriggerEnter(Collider other)
     {
+        if (other.TryGetComponent<PortalTrigger>(out PortalTrigger portal))
+        {
+            _target = portal.transform;
+            _status = CharacterStatus.Attraction;
+        }
+    }
+
+    public void Deactivate()
+    {
+        _status = CharacterStatus.Stay;
         _isMoving = false;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.constraints = RigidbodyConstraints.None;
-        _spine0.constraints = RigidbodyConstraints.None;
-        _spine1.constraints = RigidbodyConstraints.None;
-
+        //_spine0.constraints = RigidbodyConstraints.None;
+        //_spine1.constraints = RigidbodyConstraints.None;
     }
 }
