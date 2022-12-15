@@ -15,6 +15,7 @@ public class MovementController : MonoBehaviour
     [Range(-5, 15)]
     [SerializeField] private float _force;
     [SerializeField] private Vector3 _reductionTarget;
+    [SerializeField] private ParticleSystem _dust;
   
     private bool _isMoving = false;
 
@@ -117,6 +118,9 @@ public class MovementController : MonoBehaviour
     {
         Vector3 newDirection = Vector3.Reflect(_movingDirection, collision.contacts[0].normal);
         _movingDirection = newDirection.normalized;
+        _dust.transform.position = collision.contacts[0].point;
+        _dust.Play();
+        Vibration.Hit();
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -9,8 +9,9 @@ public class InputHandler : MonoBehaviour
 
     [SerializeField] private LineRenderer _lineRenderer;
     [SerializeField] private Transform _activeCharacter;
+    [SerializeField] private LayerMask IgnoreLayers;
 
-    private bool _isActive = true;
+    [SerializeField] private bool _isActive = false;
 
     public delegate void InputGet(Vector3 direction);
     public static event InputGet OnInputGetted;
@@ -34,7 +35,7 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && _isActive)
         {
             Vector3[] points = new Vector3[2];
             _lineRenderer.enabled = true;
@@ -48,7 +49,7 @@ public class InputHandler : MonoBehaviour
 
             // Your raycast handling
             RaycastHit hit;
-            if (Physics.Raycast(ray.origin, ray.direction, out hit))
+            if (Physics.Raycast(ray.origin, ray.direction, out hit, IgnoreLayers))
             {
                 if(hit.transform.TryGetComponent<InputHandler>(out InputHandler handler))
                 {
@@ -74,5 +75,19 @@ public class InputHandler : MonoBehaviour
     public void SetNewCharacter(Transform character)
     {
         _activeCharacter = character;
+        _isActive = true;
     }
+
+    public void Activate()
+    {
+        StartCoroutine(ActivateNextFrame());
+    }
+
+    IEnumerator ActivateNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        _isActive = true;
+    }
+
+
 }
