@@ -26,6 +26,11 @@ public class MovementController : MonoBehaviour
     private CharacterStatus _status;
     private CharacterController _characterController;
 
+    public delegate void PortalReached();
+    public static event PortalReached OnPortalReached;
+
+
+
 
 
     private void OnEnable()
@@ -87,7 +92,7 @@ public class MovementController : MonoBehaviour
         if (Reduction())
         {
             Deactivate();
-            _characterController.Deactivate();
+            _characterController.Deactivate(true);
             
         }
     }
@@ -124,10 +129,17 @@ public class MovementController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PortalTrigger>(out PortalTrigger portal))
+        if (other.TryGetComponent<PortalTrigger>(out PortalTrigger portal) && _status != CharacterStatus.Attraction)
         {
             _target = portal.transform;
             _status = CharacterStatus.Attraction;
+            OnPortalReached();
+        }
+        if (other.TryGetComponent<SpikesTrigger>(out SpikesTrigger spike))
+        {
+            _rigidbody.isKinematic = true;
+            _characterController.Deactivate(false);
+            Debug.Log("Spike hit");
         }
     }
 

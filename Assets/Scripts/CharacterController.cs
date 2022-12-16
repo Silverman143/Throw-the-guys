@@ -6,6 +6,7 @@ public class CharacterController : MonoBehaviour
 {
     [SerializeField] private bool _isActiveCharacter = false;
     private MovementController _movementController;
+    private bool _removable = false;
 
     public delegate void CharacterFinished(CharacterController character);
     public static event CharacterFinished OnFinished;
@@ -34,11 +35,17 @@ public class CharacterController : MonoBehaviour
 
     public bool IsActiveCharacter() => _isActiveCharacter;
 
-    public void Deactivate()
+    public void Deactivate(bool remove)
     {
+        _removable = remove;
         _movementController.Deactivate();
         _movementController.enabled = false;
         OnFinished(this);
+    }
+
+    public void Remove()
+    {
+        if (_removable) Destroy(this.gameObject);
     }
     public Transform GetPelvisPos() => _movementController.transform;
 }

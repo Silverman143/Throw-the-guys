@@ -12,6 +12,9 @@ public class CharactersSwitcher : MonoBehaviour
 
     private InputHandler _inputHandler;
 
+    public delegate void CharactersFinished();
+    public static event CharactersFinished OnCharactersFinished;
+
 
     private void Start()
     {
@@ -39,9 +42,17 @@ public class CharactersSwitcher : MonoBehaviour
     private void ChangeCharacter(CharacterController character)
     {
         _characters.Remove(character);
-        Destroy(character.gameObject);
-        _currentCharacter = _characters[Random.RandomRange(0, _characters.Count - 1)];
-        _currentCharacter.SetStart(_startPos, _startRotation);
-        _inputHandler.SetNewCharacter(_currentCharacter.GetPelvisPos());
+        character.Remove();
+        if (_characters.Count > 0)
+        {
+            _currentCharacter = _characters[Random.RandomRange(0, _characters.Count - 1)];
+            _currentCharacter.SetStart(_startPos, _startRotation);
+            _inputHandler.SetNewCharacter(_currentCharacter.GetPelvisPos());
+        }
+        else
+        {
+            OnCharactersFinished();
+        }
+        
     }
 }
