@@ -7,6 +7,14 @@ public class TapToPlayHandler : MonoBehaviour
     [SerializeField] private InputHandler _inputHandler;
 
 
+    private void Awake()
+    {
+        if (DataHandler.CurrentLevel() == 0 | DataHandler.CurrentLevel() == 7)
+        {
+            Activate();
+        }
+    }
+
     private void FixedUpdate()
     {
         if (Input.touchCount > 0)
@@ -14,9 +22,14 @@ public class TapToPlayHandler : MonoBehaviour
             Touch touch = Input.touches[0];
             if (touch.phase == TouchPhase.Ended)
             {
-                _inputHandler.Activate();
-                gameObject.SetActive(false);
+                Activate();
             }
         }
+    }
+
+    private void Activate()
+    {
+        _inputHandler.Activate();
+        gameObject.SetActive(false);
     }
 }

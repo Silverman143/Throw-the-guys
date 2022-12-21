@@ -135,10 +135,12 @@ public class MovementController : MonoBehaviour
             _status = CharacterStatus.Attraction;
             OnPortalReached();
         }
-        if (other.TryGetComponent<SpikesTrigger>(out SpikesTrigger spike))
+        if (other.TryGetComponent<SpikesTrigger>(out SpikesTrigger spike) && _status == CharacterStatus.Move)
         {
             _rigidbody.isKinematic = true;
+
             _characterController.Deactivate(false);
+            _characterController.SetParrent(spike.transform);
             Debug.Log("Spike hit");
         }
     }
@@ -152,4 +154,5 @@ public class MovementController : MonoBehaviour
         //_spine0.constraints = RigidbodyConstraints.None;
         //_spine1.constraints = RigidbodyConstraints.None;
     }
+
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InputHandler : MonoBehaviour
 {
@@ -12,9 +13,15 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private LayerMask IgnoreLayers;
 
     [SerializeField] private bool _isActive = false;
+    [SerializeField] private bool _onInputField = false;
 
     public delegate void InputGet(Vector3 direction);
     public static event InputGet OnInputGetted;
+
+    public UnityEvent OnInputStart;
+
+    private RotatorObstacle _activeRotor;
+    private bool _blocked = false;
 
     protected virtual void Awake()
     {
@@ -35,39 +42,69 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.touchCount > 0 && _isActive)
+        if (Input.touchCount > 0)
         {
-            Vector3[] points = new Vector3[2];
-            _lineRenderer.enabled = true;
-            _lineRenderer.SetPositions (points);
             Touch touch = Input.touches[0];
-
-            Vector2 touchPos = Input.GetTouch(0).position;
-
-            // The ray to the touched object in the world
-            Ray ray = Camera.main.ScreenPointToRay(touchPos);
-
-            // Your raycast handling
-            RaycastHit hit;
-            if (Physics.Raycast(ray.origin, ray.direction, out hit, IgnoreLayers))
+            if (_isActive && (touch.phase == TouchPhase.Began | touch.phase == TouchPhase.Moved | touch.phase == TouchPhase.Stationary))
             {
-                if(hit.transform.TryGetComponent<InputHandler>(out InputHandler handler))
+                OnInputStart.Invoke();
+
+                Vector3[] points = new Vector3[2];
+                _lineRenderer.enabled = true;
+                _lineRenderer.SetPositions(points);
+
+                Vector2 touchPos = Input.GetTouch(0).position;
+
+                // The ray to the touched object in the world
+                Ray ray = Camera.main.ScreenPointToRay(touchPos);
+
+                // Your raycast handling
+                RaycastHit hit;
+                if (Physics.Raycast(ray.origin, ray.direction, out hit, IgnoreLayers))
                 {
-                    
-                    points[0] = hit.point;
-                    points[1] = _activeCharacter.position;
-                    direction = points[1] - points[0];
-                    _lineRenderer.SetPositions(points);
+                    if (hit.transform.TryGetComponent<InputHandler>(out InputHandler handler) && !_blocked)
+                    {
+                        _onInputField = true;
+                        //_lineRenderer.enabled = true;
+                        //_lineRenderer.SetPositions(points);
+                        points[0] = hit.point;
+                        points[1] = _activeCharacter.position;
+                        direction = points[1] - points[0];
+                        _lineRenderer.SetPositions(points);
+                    }
+                    else
+                    {
+                        _onInputField = false;
+                        //direction = Vector3.zero;
+                        //_lineRenderer.enabled = false;
+                    }
+
+                    if (hit.transform.TryGetComponent<RotatorObstacle>(out RotatorObstacle rotator))
+                    {
+                        _activeRotor = rotator;
+                    }
+                    else if (_activeRotor != null)
+                    {
+                        _activeRotor = null;
+                    }
                 }
             }
 
             if (touch.phase == TouchPhase.Ended)
             {
-                _lineRenderer.enabled = false;
-                _isActive = false;
-                OnInputGetted(direction.normalized);
-                direction = Vector3.zero;
-                _lineRenderer.enabled = false;
+                if (_onInputField && _isActive)
+                {
+                    _isActive = false;
+                    OnInputGetted(direction.normalized);
+                    direction = Vector3.zero;
+                    _lineRenderer.enabled = false;
+                }
+                if (_activeRotor != null)
+                {
+                    _activeRotor.Interact();
+                    _activeRotor = null;
+                }
+
             }
         }
     }
@@ -82,6 +119,12 @@ public class InputHandler : MonoBehaviour
     {
         StartCoroutine(ActivateNextFrame());
     }
+
+    public void SetBlock(bool value)
+    {
+        _blocked = value;
+    }
+
 
     IEnumerator ActivateNextFrame()
     {

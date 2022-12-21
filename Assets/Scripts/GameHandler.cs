@@ -6,6 +6,7 @@ public class GameHandler : MonoBehaviour
 {
     [SerializeField] private GameObject _characterPrefab;
     [SerializeField] private GameObject _confetti;
+    [SerializeField] private GameObject[] _levels;
 
     private MenuHandler _menuHandler;
 
@@ -15,6 +16,15 @@ public class GameHandler : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         _menuHandler = FindObjectOfType<MenuHandler>();
+
+        if (!PlayerPrefs.HasKey("CurrentLevel"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 0);
+        }
+
+        LoadLevel();
+
+        PlayerPrefs.SetInt("CurrentLevel", 0);
     }
 
     private void OnEnable()
@@ -45,5 +55,21 @@ public class GameHandler : MonoBehaviour
     private void AddWinCharacter()
     {
         _winCharacters++;
+    }
+
+    private void LoadLevel()
+    {
+        int level = DataHandler.CurrentLevel();
+        if(level < _levels.Length)
+        {
+            _levels[level].SetActive(true);
+        }
+        else
+        {
+            _levels[Random.RandomRange(2, _levels.Length - 1)].SetActive(true);
+            Debug.Log("Random Level");
+        }
+
+        
     }
 }

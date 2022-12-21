@@ -40,6 +40,7 @@ public class CharacterController : MonoBehaviour
         _removable = remove;
         _movementController.Deactivate();
         _movementController.enabled = false;
+        Debug.Log("Character on finished");
         OnFinished(this);
     }
 
@@ -48,4 +49,9 @@ public class CharacterController : MonoBehaviour
         if (_removable) Destroy(this.gameObject);
     }
     public Transform GetPelvisPos() => _movementController.transform;
+
+    public void SetParrent(Transform obj)
+    {
+        transform.parent = obj;
+    }
 }
