@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "482589377122",
+    "project_id": "people-pinball",
+    "storage_bucket": "people-pinball.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482589377122:android:69fc06ea4a775a82c2073b",
+        "android_client_info": {
+          "package_name": "com.CollapsarGames.PeoplePinBall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482589377122-ihna83n9uubpe3ecrcegubiv8auepdin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8vuco6T3jc7KO3KGIJdETn4cNnAyCeck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482589377122-ihna83n9uubpe3ecrcegubiv8auepdin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
