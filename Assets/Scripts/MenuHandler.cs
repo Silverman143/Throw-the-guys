@@ -26,7 +26,6 @@ public class MenuHandler : MonoBehaviour
         _inGameLevelCounter.SetActive(false);
         _levelCompletePanel.SetActive(true);
         _completeLevelText.text = "LEVEL " + DataHandler.CurrentLevel();
-        DataHandler.LevelUpload();
 
     }
 

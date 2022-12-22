@@ -9,7 +9,7 @@ public class Settings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        FireBaseSetter();
+        
         AppLovinEnabled();
 
 #if UNITY_IOS
@@ -18,6 +18,10 @@ public class Settings : MonoBehaviour
 #elif UNITY_ANDROID
         /* Mandatory - set your Android app token here */
         InitAdjust("dsnh9ut1wagw");
+
+#elif UNITY_EDITOR
+        FireBaseSetter();
+
 #endif
     }
 

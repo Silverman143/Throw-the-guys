@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class TapToPlayHandler : MonoBehaviour
 {
     [SerializeField] private InputHandler _inputHandler;
+    private int _currentLevel;
 
-
-    private void Awake()
+    private void Start()
     {
-        if (DataHandler.CurrentLevel() == 0 | DataHandler.CurrentLevel() == 7)
+        _currentLevel = PlayerPrefs.GetInt("CurrentLevel");
+        if (_currentLevel == 0 | _currentLevel == 7)
         {
             Activate();
         }
@@ -30,6 +32,15 @@ public class TapToPlayHandler : MonoBehaviour
     private void Activate()
     {
         _inputHandler.Activate();
+        try
+        {
+            AnaliticsHandler.LevelStart(_currentLevel);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+
         gameObject.SetActive(false);
     }
 }

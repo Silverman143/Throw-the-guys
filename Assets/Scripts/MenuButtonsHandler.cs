@@ -19,6 +19,12 @@ public class MenuButtonsHandler : MonoBehaviour
 
     public void RestartButton()
     {
+        AnaliticsHandler.LevelRestart(DataHandler.CurrentLevel());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void NextLevelButton()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

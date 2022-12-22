@@ -12,6 +12,8 @@ public class GameHandler : MonoBehaviour
 
     private int _winCharacters = 0;
 
+    private static bool _gameStarts = false;
+
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -24,7 +26,17 @@ public class GameHandler : MonoBehaviour
 
         LoadLevel();
 
-        PlayerPrefs.SetInt("CurrentLevel", 0);
+        
+    }
+
+    private void Start()
+    {
+        if (!_gameStarts)
+        {
+            AnaliticsHandler.GameStart();
+            _gameStarts = true;
+        }
+        DataHandler.AddLevelAttempt(DataHandler.CurrentLevel());
     }
 
     private void OnEnable()
@@ -39,15 +51,20 @@ public class GameHandler : MonoBehaviour
         MovementController.OnPortalReached -= AddWinCharacter;
     }
 
+
     private void LevelFinished()
     {
+        int currentLevel = DataHandler.CurrentLevel();
         if (_winCharacters > 0)
         {
             _menuHandler.ShowLevelComplete();
+            DataHandler.LevelUpload();
             _confetti.SetActive(true);
+            AnaliticsHandler.LevelComplete(currentLevel , _winCharacters);
         }
         else
         {
+            AnaliticsHandler.LevelFailed(currentLevel);
             _menuHandler.ShowLevelFailed();
         }
     }
