@@ -21,7 +21,7 @@ public class RotatorObstacle : MonoBehaviour
     {
         if (_auto)
         {
-            transform.RotateAround(transform.position, Vector3.up, 20 * Time.deltaTime);
+            transform.RotateAround(transform.position, Vector3.up, _rotSpeed * Time.deltaTime);
         }
         else
         {

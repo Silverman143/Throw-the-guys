@@ -12,7 +12,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Rigidbody _spine0;
     [SerializeField] private Rigidbody _spine1;
-    [Range(-5, 15)]
+    [Range(-5, 20)]
     [SerializeField] private float _force;
     [SerializeField] private Vector3 _reductionTarget;
     [SerializeField] private ParticleSystem _dust;
@@ -141,7 +141,7 @@ public class MovementController : MonoBehaviour
 
             _characterController.Deactivate(false);
             _characterController.SetParrent(spike.transform);
-            Debug.Log("Spike hit");
+            Vibration.Spikes();
         }
     }
 

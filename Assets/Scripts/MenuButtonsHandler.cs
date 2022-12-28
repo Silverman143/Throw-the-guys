@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuButtonsHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private GameHandler _gameHandler;
     void Start()
     {
-        
+        _gameHandler = FindObjectOfType<GameHandler>();
     }
 
     // Update is called once per frame
@@ -19,8 +19,19 @@ public class MenuButtonsHandler : MonoBehaviour
 
     public void RestartButton()
     {
-        AnaliticsHandler.LevelRestart(DataHandler.CurrentLevel());
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        int currentLevel = DataHandler.CurrentLevel();
+        if (_gameHandler.LevelComplete)
+        {
+            AnaliticsHandler.LevelRestart(currentLevel-1);
+            _gameHandler.SetRestart();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        else
+        {
+            AnaliticsHandler.LevelRestart(DataHandler.CurrentLevel());
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
     }
 
     public void NextLevelButton()

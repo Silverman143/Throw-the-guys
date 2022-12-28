@@ -71,7 +71,7 @@ MonoBehaviour:
   _rigidbody: {fileID: 168537301929573072}
   _spine0: {fileID: 0}
   _spine1: {fileID: 0}
-  _force: 15
+  _force: 20
   _reductionTarget: {x: 0, y: 0, z: 0}
   _dust: {fileID: 227561151670560487}
 --- !u!135 &168537301929573101

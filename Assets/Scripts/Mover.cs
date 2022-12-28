@@ -27,9 +27,14 @@ public class Mover : MonoBehaviour
             targetPos.x = _points[_targetPointNumver].position.x;
         }
 
+        if (_moveZ)
+        {
+            targetPos.z = _points[_targetPointNumver].position.z;
+        }
+
         _obj.position = Vector3.MoveTowards(_obj.position, targetPos, _speed);
 
-        if (_obj.position.x == targetPos.x)
+        if (Vector3.Distance(_obj.position, targetPos)<_speed)
         {
             _targetPointNumver++;
             if (_points.Length-1 < _targetPointNumver)

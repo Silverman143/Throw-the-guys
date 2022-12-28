@@ -7,12 +7,17 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameObject _characterPrefab;
     [SerializeField] private GameObject _confetti;
     [SerializeField] private GameObject[] _levels;
+    
 
     private MenuHandler _menuHandler;
 
     private int _winCharacters = 0;
 
     private static bool _gameStarts = false;
+
+    public bool LevelComplete = false;
+    public static bool _restart = false;
+    public int _activeLevel = 0;
 
     private void Awake()
     {
@@ -55,12 +60,16 @@ public class GameHandler : MonoBehaviour
     private void LevelFinished()
     {
         int currentLevel = DataHandler.CurrentLevel();
-        if (_winCharacters > 0)
+        if (_winCharacters >= 3)
         {
+            LevelComplete = true;
             _menuHandler.ShowLevelComplete();
-            DataHandler.LevelUpload();
+            if(_activeLevel == currentLevel)
+            {
+                DataHandler.LevelUpload();
+            }
+            AnaliticsHandler.LevelComplete(currentLevel, _winCharacters);
             _confetti.SetActive(true);
-            AnaliticsHandler.LevelComplete(currentLevel , _winCharacters);
         }
         else
         {
@@ -74,9 +83,21 @@ public class GameHandler : MonoBehaviour
         _winCharacters++;
     }
 
+    public void SetRestart()
+    {
+        _restart = true;
+    }
+
     private void LoadLevel()
     {
         int level = DataHandler.CurrentLevel();
+        if (_restart)
+        {
+            level--;
+            _restart = false;
+        }
+        _activeLevel = level;
+
         if(level < _levels.Length)
         {
             _levels[level].SetActive(true);

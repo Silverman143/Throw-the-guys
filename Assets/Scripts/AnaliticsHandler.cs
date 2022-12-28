@@ -42,7 +42,7 @@ public static class AnaliticsHandler
               new Firebase.Analytics.Parameter(
                 "stars", stars)
             };
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventTutorialComplete,
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("Level_complete",
                                    AchievementParameters);
     }
 
@@ -74,7 +74,7 @@ public static class AnaliticsHandler
               new Firebase.Analytics.Parameter(
                 "attemptNum", attempt)
             };
-        Firebase.Analytics.FirebaseAnalytics.LogEvent("Restart",
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("Level_restart",
                                    AchievementParameters);
     }
 }
