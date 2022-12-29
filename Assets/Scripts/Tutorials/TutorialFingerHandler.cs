@@ -30,6 +30,10 @@ public class TutorialFingerHandler : MonoBehaviour
             _finger.SetActive(true);
             _animator.enabled = true;
         }
+        else
+        {
+            Deactivate();
+        }
     }
 
     private void Deactivate()

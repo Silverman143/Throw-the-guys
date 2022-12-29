@@ -40,6 +40,7 @@ public class CharacterController : MonoBehaviour
         _removable = remove;
         _movementController.Deactivate();
         _movementController.enabled = false;
+        _isActiveCharacter = false;
         Debug.Log("Character on finished");
         OnFinished(this);
     }

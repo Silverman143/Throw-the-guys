@@ -104,7 +104,7 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            _levels[Random.RandomRange(2, _levels.Length - 1)].SetActive(true);
+            _levels[Random.RandomRange(4, _levels.Length - 1)].SetActive(true);
             Debug.Log("Random Level");
         }
 

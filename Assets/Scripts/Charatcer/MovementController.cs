@@ -131,9 +131,12 @@ public class MovementController : MonoBehaviour
     {
         if (other.TryGetComponent<PortalTrigger>(out PortalTrigger portal) && _status != CharacterStatus.Attraction)
         {
-            _target = portal.transform;
-            _status = CharacterStatus.Attraction;
-            OnPortalReached();
+            if (_characterController.IsActiveCharacter())
+            {
+                _target = portal.transform;
+                _status = CharacterStatus.Attraction;
+                OnPortalReached();
+            }
         }
         if (other.TryGetComponent<SpikesTrigger>(out SpikesTrigger spike) && _status == CharacterStatus.Move)
         {
