@@ -29,6 +29,9 @@ public class MovementController : MonoBehaviour
     public delegate void PortalReached();
     public static event PortalReached OnPortalReached;
 
+    public delegate void CharacterDead();
+    public static event CharacterDead OnCharacterDead;
+
 
 
 
@@ -140,6 +143,7 @@ public class MovementController : MonoBehaviour
         }
         if (other.TryGetComponent<SpikesTrigger>(out SpikesTrigger spike) && _status == CharacterStatus.Move)
         {
+            OnCharacterDead();
             _rigidbody.isKinematic = true;
 
             _characterController.Deactivate(false);

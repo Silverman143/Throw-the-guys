@@ -23,4 +23,11 @@ public class StarsCounter : MonoBehaviour
         _images[_counter].color = Color.white;
         _counter++;
     }
+
+    public void HideStars()
+    {
+        _images[0].gameObject.SetActive(false);
+        _images[_images.Length - 1].gameObject.SetActive(false);
+        _images = new Image[] { _images[1], _images[2] };
+    }
 }

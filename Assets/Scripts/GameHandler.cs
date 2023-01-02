@@ -10,8 +10,12 @@ public class GameHandler : MonoBehaviour
     
 
     private MenuHandler _menuHandler;
+    private InputHandler _inputHandler;
+    private CharactersSwitcher _charactersSwitcher;
+    private StarsCounter _starsCounter;
 
     private int _winCharacters = 0;
+    private int _deadCharacters = 0;
 
     private static bool _gameStarts = false;
 
@@ -29,9 +33,12 @@ public class GameHandler : MonoBehaviour
             PlayerPrefs.SetInt("CurrentLevel", 0);
         }
 
-        LoadLevel();
+        DataHandler.AddLevelAttempt(DataHandler.CurrentLevel());
+        _inputHandler = FindObjectOfType<InputHandler>();
+        _charactersSwitcher = FindObjectOfType<CharactersSwitcher>();
+        _starsCounter = FindObjectOfType<StarsCounter>();
 
-        
+        LoadLevel();
     }
 
     private void Start()
@@ -41,26 +48,51 @@ public class GameHandler : MonoBehaviour
             AnaliticsHandler.GameStart();
             _gameStarts = true;
         }
-        DataHandler.AddLevelAttempt(DataHandler.CurrentLevel());
+        //DataHandler.AddLevelAttempt(DataHandler.CurrentLevel());
+        //_inputHandler = FindObjectOfType<InputHandler>();
+        //_charactersSwitcher = FindObjectOfType<CharactersSwitcher>();
+        //_starsCounter = FindObjectOfType<StarsCounter>();
+        HideCharacters();
     }
 
     private void OnEnable()
     {
         CharactersSwitcher.OnCharactersFinished+=LevelFinished;
         MovementController.OnPortalReached += AddWinCharacter;
+        MovementController.OnCharacterDead += CountDeadCharacter;
     }
 
     private void OnDisable()
     {
         CharactersSwitcher.OnCharactersFinished -= LevelFinished;
         MovementController.OnPortalReached -= AddWinCharacter;
+        MovementController.OnCharacterDead -= CountDeadCharacter;
     }
 
+    private void HideCharacters()
+    {
+        int level = DataHandler.CurrentLevel();
+        if (level < 2)
+        {
+            _starsCounter.HideStars();
+            _charactersSwitcher.HideCharacters();
+        }
+    }
+
+    private void CountDeadCharacter()
+    {
+        _deadCharacters++;
+        if (_deadCharacters > 1)
+        {
+            _inputHandler.Deactivate();
+            LevelFinished();
+        }
+    }
 
     private void LevelFinished()
     {
         int currentLevel = DataHandler.CurrentLevel();
-        if (_winCharacters >= 3)
+        if (_winCharacters >= 3 | _activeLevel<2)
         {
             LevelComplete = true;
             _menuHandler.ShowLevelComplete();

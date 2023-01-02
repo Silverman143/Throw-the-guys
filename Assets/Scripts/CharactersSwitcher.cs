@@ -6,6 +6,7 @@ using UnityEngine;
 public class CharactersSwitcher : MonoBehaviour
 {
     [SerializeField] private List<CharacterController> _characters;
+    [SerializeField] private CharacterController _centralCharacter;
     [SerializeField] private CharacterController _currentCharacter;
     private Vector3 _startPos;
     private Quaternion _startRotation;
@@ -19,7 +20,7 @@ public class CharactersSwitcher : MonoBehaviour
     private void Start()
     {
         _inputHandler = FindObjectOfType<InputHandler>();
-        _characters = FindObjectsOfType<CharacterController>().ToList<CharacterController>();
+        //_characters = FindObjectsOfType<CharacterController>().ToList<CharacterController>();
         _startPos = _currentCharacter.GetPosition();
         _startRotation = _currentCharacter.GetRotation();
     }
@@ -54,5 +55,23 @@ public class CharactersSwitcher : MonoBehaviour
             OnCharactersFinished();
         }
         
+    }
+
+    public void HideCharacters()
+    {
+
+        for (int i = 0; i < _characters.Count; i++)
+        {
+
+            if (_characters[i] != _currentCharacter && _characters[i] != _centralCharacter)
+            {
+                CharacterController character = _characters[i];
+
+                _characters.Remove(character);
+                character.enabled = false;
+                Destroy(character.gameObject);
+                i--;
+            }
+        }
     }
 }

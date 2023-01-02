@@ -119,6 +119,10 @@ public class InputHandler : MonoBehaviour
     {
         StartCoroutine(ActivateNextFrame());
     }
+    public void Deactivate()
+    {
+        _isActive = false;
+    }
 
     public void SetBlock(bool value)
     {
