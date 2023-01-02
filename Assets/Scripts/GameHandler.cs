@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameAnalyticsSDK;
 
 public class GameHandler : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class GameHandler : MonoBehaviour
 
     private void Start()
     {
+        GameAnalytics.Initialize();
+
         if (!_gameStarts)
         {
             AnaliticsHandler.GameStart();
