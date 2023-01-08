@@ -87,7 +87,6 @@ public class GameHandler : MonoBehaviour
         _deadCharacters++;
         if (_deadCharacters > 1)
         {
-            _inputHandler.Deactivate();
             LevelFinished();
         }
     }
@@ -108,6 +107,7 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
+            _inputHandler.SetGameOver();
             AnaliticsHandler.LevelFailed(currentLevel);
             _menuHandler.ShowLevelFailed();
         }

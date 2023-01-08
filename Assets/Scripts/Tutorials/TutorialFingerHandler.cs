@@ -38,10 +38,9 @@ public class TutorialFingerHandler : MonoBehaviour
 
     private void Deactivate()
     {
-        Debug.Log("_______________________________");
         _animator.enabled = false;
         _finger.SetActive(false);
-        gameObject.SetActive(false);
+        this.enabled = false; ;
     }
 
 }

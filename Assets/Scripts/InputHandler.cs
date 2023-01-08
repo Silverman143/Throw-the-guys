@@ -13,6 +13,7 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private LayerMask IgnoreLayers;
 
     [SerializeField] private bool _isActive = false;
+    [SerializeField] private bool _isGameOver = false;
     [SerializeField] private bool _onInputField = false;
 
     public delegate void InputGet(Vector3 direction);
@@ -45,7 +46,7 @@ public class InputHandler : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.touches[0];
-            if (_isActive && (touch.phase == TouchPhase.Began | touch.phase == TouchPhase.Moved | touch.phase == TouchPhase.Stationary))
+            if (!_isGameOver && _isActive && (touch.phase == TouchPhase.Began | touch.phase == TouchPhase.Moved | touch.phase == TouchPhase.Stationary))
             {
                 OnInputStart.Invoke();
 
@@ -122,6 +123,11 @@ public class InputHandler : MonoBehaviour
     public void Deactivate()
     {
         _isActive = false;
+    }
+
+    public void SetGameOver()
+    {
+        _isGameOver = true;
     }
 
     public void SetBlock(bool value)
